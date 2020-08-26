@@ -1,0 +1,124 @@
+from tkinter import *
+from selenium import webdriver
+from time import sleep
+from random import randint
+import random
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
+like = 0
+total = 0
+choix = True, False
+
+def start():
+    global driver
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    driver = webdriver.Chrome(executable_path='D:\Desktop\chromedriver.exe', options=options)
+    driver.get('https://www.instagram.com/?hl=fr')
+    sleep(3)
+    username = driver.find_element_by_name("username")
+    mdp = driver.find_element_by_name("password")
+    username.send_keys(usernamet.get())
+    mdp.send_keys(passewordt.get())
+    # click on conection
+    sleep(2)
+    connect_click = driver.find_element_by_xpath(
+    "/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div/div[3]/button")
+    connect_click.click()
+    # button register
+    WebDriverWait(driver, 5).until(
+    EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/section/main/div/div/div/section/div/button")))
+    save = driver.find_element_by_xpath("/html/body/div[1]/section/main/div/div/div/div/button")
+    save.click()
+    # notification button
+    WebDriverWait(driver, 5).until(
+    EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div/div/div/div[3]/button[2]")))
+    notif = driver.find_element_by_xpath("/html/body/div[4]/div/div/div/div[3]/button[2]")
+    notif.click()
+    # choose the  hashtag
+    sleep(1)
+    find = driver.find_element_by_xpath("/html/body/div[1]/section/nav/div[2]/div/div/div[2]/input")
+    find.send_keys(hashtage.get())
+    # click on the hashtag button
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located(
+    (By.XPATH, "/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[3]/div[2]/div/a[1]/div/div/div[1]/span")))
+    hashtag_button = driver.find_element_by_xpath(
+    "/html/body/div[1]/section/nav/div[2]/div/div/div[2]/div[3]/div[2]/div/a[1]/div/div/div[1]/span")
+    hashtag_button.click()
+    # click on the first pic
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located(
+    (By.XPATH, "/html/body/div[1]/section/main/article/div[1]/div/div/div[1]/div[2]")))
+    first_pic = driver.find_element_by_xpath("/html/body/div[1]/section/main/article/div[1]/div/div/div[1]/div[2]")
+    first_pic.click()
+    nmb = int(liket.get())
+    global choix
+    global like
+    while like < nmb:
+        x = random.choice(choix)
+        if x:
+            change_and_like()
+            like += 1
+        else:
+            change()
+
+
+def change_and_like():
+    global driver
+    sleep(randint(1, 5))
+    like = driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/article/div[3]/section[1]/span[1]/button")
+    like.click()
+    sleep(randint(1, 5))
+    change = driver.find_element_by_xpath("/html/body/div[4]/div[1]/div/div/a[2]")
+    change.click()
+    sleep(randint(1, 5))
+
+
+def change():
+    global driver
+    sleep(randint(1, 5))
+    change = driver.find_element_by_xpath("/html/body/div[4]/div[1]/div/div/a[2]")
+    change.click()
+    sleep(randint(1, 5))
+
+
+root = Tk()
+root.title("instagram bot")
+root.geometry('400x250')
+root.config(bg="#8DB3AD")
+
+title = Label(text="welcome", bg="#8DB3AD", font=("helvetica", 16), fg="white")
+title.pack()
+
+start = Button(text="start", font=("helvetica", 16), fg="white", bg="#769590", command=start)
+start.pack(side="bottom", fill=X)
+
+passewordt = Entry()
+passewordt.insert(0, "")
+passewordt.config(show='*')
+passewordt.pack(side="bottom")
+
+
+
+past = Label(text='mot de passe', bg="#8DB3AD", font="helvetica 10")
+past.pack(side="bottom")
+
+jump = Label(bg="#8DB3AD")
+jump.pack(side="bottom")
+
+usernamet = Entry()
+usernamet.insert(0, "nom d'utilisateur")
+usernamet.pack(side="bottom")
+
+liket = Entry()
+liket.insert(0, "combien de like")
+liket.pack(side="right")
+
+
+hashtage = Entry()
+hashtage.insert(0, "quelle hashtag ?")
+hashtage.pack(side="left")
+
+
+root.mainloop()
